@@ -94,5 +94,29 @@ stop_num_words <- c("one", "two", "three", "four", "five",
 
 stop_num <- as.character(stop_num)
 
-stop_numbers <- c(stop_num, stop_num_words)
+stop_numbers_list <- c(stop_num, stop_num_words)
+
+stop_numbers <- tibble(word = stop_numbers_list)
+
+# compute word counts again 
+tokens %>%
+  anti_join(stop_words) %>%
+  anti_join(stop_numbers) %>%
+  count(word) %>%
+  arrange(desc(n)) %>%
+  mutate(word2 = fct_reorder(word, n)) %>%
+  slice(1:20) %>%
+  ggplot(aes(x = word2, y = n)) +
+  geom_col() +
+  # Flip the plot coordinates
+  coord_flip()
+
 ```
+
+Let's perform sentiment analysis using 'nrc' sentiment dictionary. Append dictionary to the subset created in (e). Create a bar plot of the word counts colored by sentiment. Show only the top 10 words for each sentiment using facet wrap.
+
+```{r}
+
+```
+
+What would you say about the sentiments displayed in this book?
