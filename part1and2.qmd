@@ -4,23 +4,48 @@ format: pdf
 editor: visual
 ---
 
-## Quarto
+```{r}
+library(tidyverse)
+library(usethis)
+library(rvest)
+library(gt)
+```
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+## Part I: Web Scraping
 
-## Running Code
+Go to the website <https://www.scrapethissite.com/pages/simple/> and scrape the data to create
+a table with four variables: Country, Capital, Population, and Area. The table will have a total of
+250 observations.
+
+```{r}
+url <- "https://www.scrapethissite.com/pages/simple/"
+html <- read_html(url)
+
+country <- html |>
+  html_elements("h3.country-name") |> 
+  html_text2() 
+
+capital <- html |>
+  html_elements("span.country-capital") |> 
+  html_text2() 
+
+population <- html %>%
+  html_elements("span.country-population") %>%
+  html_text2()
+
+area <- html |>
+  html_elements("span.country-area") |> 
+  html_text2() 
+
+# Build tibble
+country_table <- tibble(country, capital, population, area)
+country_table
+```
+
+## Part II: Text Analysis
 
 When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
 
 ```{r}
 1 + 1
 ```
-
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
-```
-
-The `echo: false` option disables the printing of code (only output is displayed).
