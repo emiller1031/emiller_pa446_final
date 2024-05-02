@@ -9,6 +9,9 @@ library(tidyverse)
 library(usethis)
 library(rvest)
 library(gt)
+library(tidytext)
+library(readr)
+library(tokenizers)
 ```
 
 ## Part I: Web Scraping
@@ -44,8 +47,19 @@ country_table
 
 ## Part II: Text Analysis
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+Use the artofwar dataset and conduct a text analysis.
+
+Tokenize the data, compute word counts, remove stop words, and create bar plot showing dataset's top ten used words, flipping the axes.
 
 ```{r}
-1 + 1
+# Tokenize the data
+text_data <- read_csv("artofwar.csv")
+
+text_data <- text_data %>%
+  rename("origcol" = x) # the column name was giving me trouble, so i renamed it
+
+tokens <- text_data %>%
+  unnest_tokens(words, origcol)
+
+# Compute word counts
 ```
