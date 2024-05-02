@@ -1,10 +1,13 @@
 ---
 title: "Parts I & II"
+author: "Elizabeth Miller"
 format: pdf
 editor: visual
 ---
 
 ```{r}
+#| warning: false
+#| echo: false
 library(tidyverse)
 library(usethis)
 library(rvest)
