@@ -59,7 +59,40 @@ text_data <- text_data %>%
   rename("origcol" = x) # the column name was giving me trouble, so i renamed it
 
 tokens <- text_data %>%
-  unnest_tokens(words, origcol)
+  unnest_tokens(word, origcol)
 
 # Compute word counts
+tokens %>%
+  count(word)
+
+# Remove stop words
+tokens %>%
+  anti_join(stop_words)
+
+# create bar plot showing dataset's top 10 used words
+tokens %>%
+  anti_join(stop_words) %>%
+  count(word) %>%
+  arrange(desc(n)) %>%
+  slice(1:10) %>%
+  ggplot(aes(x = word, y = n)) +
+  geom_col() +
+  # Flip the plot coordinates
+  coord_flip()
+```
+
+Let's make the visualization better by creating custom stop words to remove all numbers. Compute word counts again and create a bar plot that shows top 20 used words. Create a bar plot showing the dataset's top 20 used words, remembering to flip the axes for better visualization
+
+```{r}
+# custom stop words
+stop_num <- (1:20)
+stop_num_words <- c("one", "two", "three", "four", "five",
+                   "six", "seven", "eight", "nine", "ten",
+                   "eleven", "twelve", "thirteen", "fourteen",
+                   "fifteen" , "sixteen", "seventeen", "eighteen",
+                   "nineteen", "twenty")
+
+stop_num <- as.character(stop_num)
+
+stop_numbers <- c(stop_num, stop_num_words)
 ```
