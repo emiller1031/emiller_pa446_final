@@ -103,6 +103,14 @@ tokens %>%
   anti_join(stop_words) %>%
   anti_join(stop_numbers) %>%
   count(word) %>%
+  arrange(desc(n)) 
+
+# make bar plot
+
+tokens %>%
+  anti_join(stop_words) %>%
+  anti_join(stop_numbers) %>%
+  count(word) %>%
   arrange(desc(n)) %>%
   mutate(word2 = fct_reorder(word, n)) %>%
   slice(1:20) %>%
@@ -116,7 +124,39 @@ tokens %>%
 Let's perform sentiment analysis using 'nrc' sentiment dictionary. Append dictionary to the subset created in (e). Create a bar plot of the word counts colored by sentiment. Show only the top 10 words for each sentiment using facet wrap.
 
 ```{r}
+# Append the dictionary to the subset created in part (e)
+tokens_no_num <- tokens %>%
+  anti_join(stop_words) %>%
+  anti_join(stop_numbers) 
 
+war_sentiment<- tokens_no_num %>%
+  inner_join(get_sentiments("nrc"),
+             relationship = "many-to-many")
+
+# Create a bar plot of the word counts colored by sentiment. Show top 10 words
+war_sentiment <- tokens_no_num %>%
+  inner_join(get_sentiments("nrc"),
+             relationship = "many-to-many") %>%
+  count(word, sentiment) %>%
+  group_by(sentiment) %>%
+  slice_max(n, n =10) %>%
+  ungroup() %>%
+  mutate(word2 = fct_reorder(word, n))
+
+# bar plot
+ggplot(war_sentiment, aes(x = word2, y = n,
+                        fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  # Create a separate facet for each sentiment with free axes
+  facet_wrap(~ sentiment, scales = "free") +
+  coord_flip() +
+  # Title the plot "Sentiment Word Counts" with "Words" for the x-axis
+  labs(
+    title = "Sentiment Word Counts",
+    x = "Words"
+  )
 ```
 
-What would you say about the sentiments displayed in this book?
+**What would you say about the sentiments displayed in this book?**
+
+Sentiments are largely negative or antagonistic, which makes sense because these are excerpts from The Art of War. Positive sentiments that are included in the text are usually still related to war, such as "victory" or "advance."
